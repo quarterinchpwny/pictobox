@@ -33,7 +33,7 @@ class MediaController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
 
             // Store the file in the storage (e.g., Google Drive or S3)
-            $path = $file->store('', 'google'); // Change 'google' to 's3' if using S3
+            $path = $file->storeAs('media', $filename, 'public');
 
             $media = Media::create([
                 'filename' => $filename,
@@ -71,11 +71,12 @@ class MediaController extends Controller
                 $filename = time() . '_' . $file->getClientOriginalName();
 
                 // Delete the old file from storage
-                Storage::disk('google')->delete($media->path);
+                Storage::disk('public')->delete($media->path);
 
-                // Store the new file in the storage (e.g., Google Drive or S3)
-                $path = $file->store('', 'google'); // Change 'google' to 's3' if using S3
+                // Store the new file locally
+                $path = $file->storeAs('media', $filename, 'public');
 
+                // Update the media record with new file information
                 $media->update([
                     'filename' => $filename,
                     'path' => $path,
@@ -83,6 +84,7 @@ class MediaController extends Controller
                     'event_id' => $request->event_id ?? $media->event_id,
                 ]);
             } else {
+                // Update only metadata if no new file is uploaded
                 $media->update($request->only('event_id', 'type'));
             }
 
@@ -98,8 +100,8 @@ class MediaController extends Controller
     public function destroy(Media $media)
     {
         try {
-            // Delete the file from storage
-            Storage::disk('google')->delete($media->path); // Change 'google' to 's3' if using S3
+            // Delete the file from local storage
+            Storage::disk('public')->delete($media->path);
 
             // Delete the media record from the database
             $media->delete();
