@@ -15,7 +15,7 @@ trait HttpJsonResponse
             'data' => $data,
         ], $code);
     }
-    public function errorResponse($e, $message = 'An error occurred', $code = Response::HTTP_BAD_REQUEST)
+    public function errorResponse($e, $message = 'Something went wrong', $code = Response::HTTP_BAD_REQUEST)
     {
         // Log the full error details for developers
         Log::error('Error occurred', [
