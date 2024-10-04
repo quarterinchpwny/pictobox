@@ -20,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('events', EventController::class);
+Route::apiResource('event', EventController::class);
 Route::apiResource('media', MediaController::class);
