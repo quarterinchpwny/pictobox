@@ -14,7 +14,7 @@ class ApiKeyMiddleware
         $apiKey = env('API_KEY');
 
         // Check if the 'api_key' exists in the request headers and matches the .env key
-        if ($request->header('api_key') !== $apiKey) {
+        if ($request->header('API-KEY') !== $apiKey) {
             // Return a 403 Forbidden response if the API key does not match
             return response()->json([
                 'message' => 'Unauthorized'
